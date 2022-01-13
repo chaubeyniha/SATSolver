@@ -1,2 +1,2 @@
-# SATSolver
-An implementation of SAT Solver
+# SAT Solver
+An implementation of SAT Solver with various heuristics
