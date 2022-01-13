@@ -7,7 +7,7 @@ import time
 import shutil
 
 current_dir=pathlib.Path().resolve()
-test_folder = f'{current_dir}/test_folder'
+aux_folder = f'{current_dir}/aux_folder'
 solutions_folder = f'{current_dir}/solutions'
 args = sys.argv
 input_file = args[1]
@@ -43,7 +43,7 @@ def create_DIMACS_files_from_txt(path:str):
 
 def generate_DIMACS_file_from_line(n: int, line: str):
     sudoku_size = int(np.sqrt(len(line)))
-    #check if is valid size, i.e, If the line size is a perfect square
+    # check if is valid size, i.e, If the line size is a perfect square
     if len(line) != sudoku_size ** 2:
         raise AttributeError(f"The following line is not valid [{line}]. Size of the line must be a perfect square.")
     sudoku_puzzle = []
