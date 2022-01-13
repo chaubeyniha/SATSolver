@@ -14,6 +14,10 @@ input_file = args[1]
 
 
 def main():
+    """
+    Function containing a method to parse and write DIMACS files
+    """
+
     create_DIMACS_files_from_txt(input_file)
     prepare_results_folders()
     for i in range(4):
@@ -56,11 +60,8 @@ def generate_DIMACS_file_from_line(n: int, line: str):
         f.write(clause)
     for clause in sudoku_puzzle:
         f.write(clause + ' 0 \n')
-    
-    #show_puzzle(sudoku_size,sudoku_puzzle)
-
-
-#returns the list of rules of a sudoku with 'sudoku_size' , Strings in DIMACS form
+        
+# returns the list of rules of a sudoku with 'sudoku_size' , Strings in DIMACS form
 def get_sudoku_rules(sudoku_size : int ):
     file_name = 'sudoku-rules'
     if sudoku_size == 4:
