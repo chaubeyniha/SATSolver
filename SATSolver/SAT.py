@@ -1,16 +1,19 @@
 import pathlib
 import random
 import math
+
 current_dir=pathlib.Path().resolve()
 aux_folder = f'{current_dir}/aux_folder'
 
 splits=0
 backtracks=0
 
-#Takes a DIMACS_file with clauses and variables as input
-#If it's satisfiable: It will return TRUE and a dict 
+# takes a DIMACS_file with clauses and variables as input
+# if it's satisfiable: it will return TRUE and a dict 
 # with every var and its thruth value
-#else: returs false
+# else: returs false
+
+# function to pick heuristic
 def SAT(DIMACS_file, heuristic_type):
     Knowledge_Base = load_file(DIMACS_file)
     assignments = get_elements_dict(Knowledge_Base)
@@ -42,13 +45,13 @@ def DP_standard(Knowledge_Base, assignments):
 
     ''' SIMPLIFICATION '''
     #Tautology Rule
-    #for clause in lines:
-       #for element in clause:
-           #if negated(element) in clause:
-               #lines.remove(clause)
-               #return DP_standard(lines, assignments)
+    # for clause in lines:
+       # for element in clause:
+           # if negated(element) in clause:
+               # lines.remove(clause)
+               #r eturn DP_standard(lines, assignments)
 
-    #Unit Clause Rule:
+    # Unit Clause Rule:
     for clause in Knowledge_Base:
         if len(clause) == 1:
             if clause[0][0] == '-': assignments_local[clause[0][1:]] = False
@@ -57,24 +60,24 @@ def DP_standard(Knowledge_Base, assignments):
 
     
     ''' SPLIT '''
-    #gets the variables that still need a truth assigment
+    # gets the variables that still need a truth assigment
     empty_positions=[]
     for element in list(assignments.keys()):
         if assignments_local[element] is None:
             empty_positions.append(element)
 
-    #it will select the first 'empty' variable 
+    # it will select the first 'empty' variable 
     for element in list(assignments.keys()):
         if assignments_local[element] is None:
-            #First, assign True to the choosen variable
+            # first, assign True to the choosen variable
             assignments_local[element] = True
             splits+=1
             sat, values = DP_standard(Knowledge_Base, assignments_local)
             if sat is True:
                 return True, values
             else:
-                #If it makes the Knowledege base inconsistent, we try assigning FALSE, and continue 
-                #BACKTRACKING:
+                # If it makes the Knowledege base inconsistent, we try assigning FALSE, and continue 
+                # BACKTRACKING:
                 assignments_local[element] = False
                 backtracks+=1
                 return DP_standard(Knowledge_Base, assignments_local)
@@ -93,7 +96,7 @@ def DP_standard_random_Split(Knowledge_Base, assignments):
             return False, assignments
 
     ''' SIMPLIFICATION '''
-    #Unit Clause Rule:
+    # Unit Clause Rule:
     for clause in Knowledge_Base:
         if len(clause) == 1:
             if clause[0][0] == '-': assignments_local[clause[0][1:]] = False
@@ -101,25 +104,24 @@ def DP_standard_random_Split(Knowledge_Base, assignments):
             return DP_standard_random_Split(Knowledge_Base, assignments_local)
 
     ''' SPLIT '''
-    #gets the variables that still need a truth assigment
+    # gets the variables that still need a truth assigment
     non_assigned = [element for element in list(assignments.keys()) if assignments[element] is None]
 
-    #selecting random variable to Split
+    # selecting random variable to Split
     selected_position=None
     if len(non_assigned)<2: selected_position = non_assigned[0]
     else: 
         x = random.randint(0, len(non_assigned)-1)
-        #print("x",x,"len(empty_positions)", len(empty_positions))
         selected_position = non_assigned[x]
         
-    #First, assign True to the choosen variable
+    # first, assign True to the choosen variable
     assignments_local[selected_position] = True
     splits+=1
     sat, values = DP_standard_random_Split(Knowledge_Base, assignments_local)
     if sat is True: return True, values
 
     
-    #If it makes the Knowledege base inconsistent, we try assigning FALSE, and continue 
+    # if it makes the Knowledege base inconsistent, we try assigning FALSE, and continue 
     # BACKTRACKING:
     else:
         assignments_local[selected_position] = False
@@ -156,7 +158,7 @@ def DP_Jeroslow_Wang_OS(Knowledge_Base, assignments):
             return False, assignments
 
     ''' SIMPLIFICATION '''
-    #Unit Clause Rule:
+    # Unit Clause Rule:
     for clause in Knowledge_Base:
         if len(clause) == 1:
             if clause[0][0] == '-': assignments_local[clause[0][1:]] = False
@@ -200,7 +202,7 @@ def DP_MOMs(Knowledge_Base, assignments):
     #           Knowledge_Base.remove(clause)
     #           return DP_standard(Knowledge_Base, assignments)
 
-    #Unit Clause Rule:
+    # Unit Clause Rule:
     for clause in Knowledge_Base:
         if len(clause) == 1:
             if clause[0][0] == '-': assignments_local[clause[0][1:]] = False
@@ -226,19 +228,15 @@ def DP_MOMs(Knowledge_Base, assignments):
 
 
 def get_MOMs_literal(min_clauses, not_assigned):
-    k=1 #tunning parameter
-    #print(min_clauses)
+    k=1 # tunning parameter
 
     score_list=[]
     for lit in not_assigned:
         
-    #for lit in clause:
-        #print("lit: ", lit)
+    # for lit in clause:
         f_x = count_numb_of_occurences(lit, min_clauses)
         f_not_x = count_numb_of_occurences(negate(lit), min_clauses)
-        #print('f_x: ',f_x,'f_not_x: ',f_not_x)
         score = (f_x + f_not_x) * math.pow(2, k) + (f_x * f_not_x) 
-        #print('score: ',score)
         score_list.append([lit, score])
 
     value=max([sublist[-1] for sublist in score_list])
@@ -252,16 +250,16 @@ def get_MOMs_literal(min_clauses, not_assigned):
 def get_min_clauses(Knowledge_Base):
     """ Returns a list of clauses with minimum size """
 
-    #GET A LIST [CLAUSE, LEN(CLAUSE)]
+    # GET A LIST [CLAUSE, LEN(CLAUSE)]
     clause_size_pair = []
     for clause in Knowledge_Base:
         clause_size_pair.append([clause, len(clause)])
 
-    #GET THE MINIMAL SIZE
+    # GET THE MINIMAL SIZE
     minimum_existing_size=min([sublist[1] for sublist in clause_size_pair])
     min_clauses=[]
     
-    #GET THE CLAUSES WITH MINIMAL SIZE
+    # GET THE CLAUSES WITH MINIMAL SIZE
     for clause in Knowledge_Base:
         if len(clause)==minimum_existing_size:
             min_clauses.append(clause)
