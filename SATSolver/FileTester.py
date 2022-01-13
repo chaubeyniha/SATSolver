@@ -7,7 +7,7 @@ import time
 import shutil
 
 current_dir=pathlib.Path().resolve()
-aux_folder = f'{current_dir}/aux_folder'
+test_folder = f'{current_dir}/test_folder'
 solutions_folder = f'{current_dir}/solutions'
 args = sys.argv
 input_file = args[1]
@@ -21,7 +21,7 @@ def main():
     create_DIMACS_files_from_txt(input_file)
     prepare_results_folders()
     for i in range(4):
-        for file in os.listdir(aux_folder):
+        for file in os.listdir(test_folder):
             i_time = time.time()
             thruth, solution, n_splits, n_backtracks = SAT(file,i)
             f_time = time.time()
