@@ -11,14 +11,14 @@ import statistics
 current_dir=pathlib.Path().resolve()
 solutions_folder = f'{current_dir}/solutions_niha'
 
-#for sub_folder in solutions_folder:
-#for file in sub_folder:
+# for sub_folder in solutions_folder:
+# for file in sub_folder:
 
 splits_list=[]
 backtracks_list=[]
 time_list=[]
 
-#change name to file name
+# change name to file name
 sub_folder=f'{solutions_folder}/Jeroslaw_OS'
 filesii = [1,2,3,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
 for i in filesii:
